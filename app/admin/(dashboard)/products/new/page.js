@@ -1,6 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import { createProduct } from "../actions";
+import DraftColorRow from "@/components/admin/DraftColorRow";
+import SaveButton from "@/components/admin/SaveButton";
 
 export default function NewProductPage() {
+  const [rowKeys, setRowKeys] = useState(() => [crypto.randomUUID()]);
+
+  function addRow() {
+    setRowKeys((keys) => [...keys, crypto.randomUUID()]);
+  }
+
+  function removeRow(key) {
+    setRowKeys((keys) => keys.filter((k) => k !== key));
+  }
+
   return (
     <div className="max-w-xl">
       <h1 className="font-heading text-2xl font-bold text-text">
@@ -8,6 +23,8 @@ export default function NewProductPage() {
       </h1>
 
       <form action={createProduct} className="mt-6 space-y-4">
+        <input type="hidden" name="colorKeys" value={rowKeys.join(",")} />
+
         <div>
           <label
             htmlFor="name"
@@ -76,12 +93,31 @@ export default function NewProductPage() {
           </p>
         </div>
 
-        <button
-          type="submit"
-          className="rounded-full bg-glow px-6 py-3 font-heading font-semibold text-white transition hover:-translate-y-0.5 hover:bg-glow-dim"
-        >
+        <div className="border-t border-line pt-4">
+          <p className="font-heading font-semibold text-text">Colors</p>
+          <p className="mt-1 text-sm text-text-dim">
+            Add at least one color now, or skip and add colors later from the
+            product page.
+          </p>
+
+          <div className="mt-4 space-y-3">
+            {rowKeys.map((key) => (
+              <DraftColorRow key={key} rowKey={key} onRemove={removeRow} />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={addRow}
+            className="mt-3 font-heading text-sm font-semibold text-glow-dim hover:underline"
+          >
+            + Add another color
+          </button>
+        </div>
+
+        <SaveButton pendingLabel="Creating product…">
           Create product
-        </button>
+        </SaveButton>
       </form>
     </div>
   );

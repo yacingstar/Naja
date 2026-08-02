@@ -21,6 +21,22 @@ async function uniqueProductId(supabase, name) {
   return `${base}-${n}`;
 }
 
+async function uploadColorImage(supabase, productId, image) {
+  if (!image || typeof image !== "object" || image.size === 0) return null;
+
+  const extension = image.name.split(".").pop() || "jpg";
+  const path = `${productId}/${crypto.randomUUID()}.${extension}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("product-images")
+    .upload(path, image, { contentType: image.type });
+
+  if (uploadError) throw new Error(uploadError.message);
+
+  return supabase.storage.from("product-images").getPublicUrl(path).data
+    .publicUrl;
+}
+
 export async function createProduct(formData) {
   await requireAdminSession();
   const supabase = createAdminClient();
@@ -42,9 +58,40 @@ export async function createProduct(formData) {
 
   if (error) throw new Error(error.message);
 
+  const colorKeys = (formData.get("colorKeys")?.toString() || "")
+    .split(",")
+    .filter(Boolean);
+
+  const colorRows = [];
+  for (const key of colorKeys) {
+    const colorName = formData.get(`color-${key}-name`)?.toString().trim();
+    if (!colorName) continue;
+
+    const hex = formData.get(`color-${key}-hex`)?.toString().trim();
+    const inStock = formData.get(`color-${key}-inStock`) === "on";
+    const image = formData.get(`color-${key}-image`);
+    const imageUrl = await uploadColorImage(supabase, id, image);
+
+    colorRows.push({
+      product_id: id,
+      color_name: colorName,
+      hex,
+      in_stock: inStock,
+      image_url: imageUrl,
+    });
+  }
+
+  if (colorRows.length > 0) {
+    const { error: colorsError } = await supabase
+      .from("product_colors")
+      .insert(colorRows);
+    if (colorsError) throw new Error(colorsError.message);
+  }
+
   revalidatePath("/");
+  revalidatePath(`/product/${id}`);
   revalidatePath("/admin/products");
-  redirect(`/admin/products/${id}`);
+  redirect("/admin/products");
 }
 
 export async function updateProduct(formData) {
@@ -105,21 +152,8 @@ export async function saveColor(formData) {
     throw new Error("Color name and hex are required.");
   }
 
-  let imageUrl = existingImageUrl;
-
-  if (image && typeof image === "object" && image.size > 0) {
-    const extension = image.name.split(".").pop() || "jpg";
-    const path = `${productId}/${crypto.randomUUID()}.${extension}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(path, image, { contentType: image.type });
-
-    if (uploadError) throw new Error(uploadError.message);
-
-    imageUrl = supabase.storage.from("product-images").getPublicUrl(path)
-      .data.publicUrl;
-  }
+  const imageUrl =
+    (await uploadColorImage(supabase, productId, image)) ?? existingImageUrl;
 
   const payload = {
     product_id: productId,

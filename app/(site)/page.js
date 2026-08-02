@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getAnonClient } from "@/lib/supabase/anon";
 import ProductCard from "@/components/site/ProductCard";
 import Button from "@/components/ui/Button";
+import { formatPrice } from "@/lib/utils";
 
 const CATEGORY_BG_CLASSES = [
   "bg-pink-soft",
@@ -49,6 +51,13 @@ export default async function HomePage({ searchParams }) {
     ? products.filter((p) => p.category === activeCategory)
     : products;
 
+  const featured = products.find((p) =>
+    (p.product_colors ?? []).some((c) => c.image_url)
+  );
+  const featuredImage = featured?.product_colors?.find(
+    (c) => c.image_url
+  )?.image_url;
+
   return (
     <div>
       {/* Hero */}
@@ -81,12 +90,35 @@ export default async function HomePage({ searchParams }) {
               className="absolute h-64 w-64 rounded-[63%_37%_54%_46%/45%_55%_45%_55%] bg-lavender sm:h-80 sm:w-80"
               aria-hidden="true"
             />
-            <div className="relative z-10 flex flex-col items-center gap-3 rounded-[28px] bg-bg-soft p-8 text-center shadow-[0_20px_40px_rgba(200,120,160,0.25)]">
-              <ShapeIcon className="h-20 w-20 text-glow" />
-              <p className="font-heading font-bold text-text">
-                Made just for you
-              </p>
-            </div>
+            {featured && featuredImage ? (
+              <Link
+                href={`/product/${featured.id}`}
+                className="relative z-10 flex w-56 flex-col items-center gap-3 rounded-[28px] bg-bg-soft p-4 text-center shadow-[0_20px_40px_rgba(200,120,160,0.25)] transition hover:-translate-y-1"
+              >
+                <div className="relative h-40 w-full overflow-hidden rounded-2xl bg-surface">
+                  <Image
+                    src={featuredImage}
+                    alt={featured.name}
+                    fill
+                    sizes="224px"
+                    className="object-cover"
+                  />
+                </div>
+                <p className="font-heading font-bold text-text">
+                  {featured.name}
+                </p>
+                <p className="font-heading font-bold text-glow-dim">
+                  {formatPrice(featured.price)}
+                </p>
+              </Link>
+            ) : (
+              <div className="relative z-10 flex flex-col items-center gap-3 rounded-[28px] bg-bg-soft p-8 text-center shadow-[0_20px_40px_rgba(200,120,160,0.25)]">
+                <ShapeIcon className="h-20 w-20 text-glow" />
+                <p className="font-heading font-bold text-text">
+                  Made just for you
+                </p>
+              </div>
+            )}
             <div className="absolute -right-2 top-2 rotate-6 rounded-2xl bg-bg-soft px-4 py-3 text-center shadow-[0_12px_24px_rgba(200,120,160,0.2)] sm:right-0">
               <p className="font-heading text-xs font-bold text-glow-dim">
                 cash on delivery
