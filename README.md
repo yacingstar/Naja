@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Naja
 
-## Getting Started
+A storefront for a made-to-order 3D-printed lamp shop in Algeria. Cash on
+delivery only — a customer orders, the shop owner calls to confirm, then
+delivers and collects cash.
 
-First, run the development server:
+- **Frontend:** Next.js (App Router, JavaScript), Tailwind CSS v4
+- **Backend:** Supabase (Postgres + Auth + Storage)
+- **Hosting:** Netlify (frontend) + Supabase (backend)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Getting started
+
+### 1. Create the Supabase project
+
+Create a project at [supabase.com](https://supabase.com), then open the SQL
+editor and run [`supabase/migration.sql`](supabase/migration.sql) top to
+bottom. It creates the `products`, `product_colors`, and `orders` tables,
+sets up RLS policies + table grants for the `anon` and `service_role` roles,
+and creates the public `product-images` Storage bucket.
+
+### 2. Create the admin account
+
+There is no public sign-up for the admin panel — the shop owner's account is
+created by hand:
+
+1. In the Supabase dashboard, go to **Authentication → Users → Add user**.
+2. Enter an email and password for the shop owner.
+3. That's it — they can log in at `/admin/login` with those credentials.
+
+### 3. Configure environment variables
+
+Copy `.env.local.example` to `.env.local` and fill in the three values from
+your Supabase project's **Settings → API** page:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=       # Project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=  # anon / public key
+SUPABASE_SERVICE_ROLE_KEY=      # service_role key — keep secret, server-only
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`SUPABASE_SERVICE_ROLE_KEY` must never be prefixed `NEXT_PUBLIC_` and is only
+ever read inside Server Actions — it's never sent to the browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Env var changes require a full restart of `npm run dev`** — they don't
+hot-reload.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Install and run
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Visit `http://localhost:3000` for the storefront and
+`http://localhost:3000/admin/login` for the admin panel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How it's put together
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Public storefront** (`app/(site)`) — home, product detail, cart,
+  checkout, order confirmation, about/contact, and placeholder login/signup
+  pages. Reads go through the anon Supabase client; placing an order is the
+  only public write, allowed by the `orders` insert policy.
+- **Cart** (`lib/cart-context.js`) — a React Context persisted to
+  `localStorage`, restored client-side only (no SSR access) to avoid
+  hydration issues. Each line item is keyed by `productId::colorName` and
+  stores a snapshot of the product at add-to-cart time, so the cart keeps
+  working even if a product is edited or removed later.
+- **Admin panel** (`app/admin`) — `/admin/login` is public; everything under
+  `app/admin/(dashboard)` requires a session, checked twice: once in
+  `proxy.js` (redirects unauthenticated requests before any admin page
+  renders) and again in the `(dashboard)` layout as a safety net. Admin
+  pages *read* data with the same anon client the public site uses. Every
+  *write* goes through a Server Action that re-verifies the session and only
+  then uses a service-role Supabase client (`lib/supabase/admin.js`,
+  guarded with `server-only`) to perform the change, and calls
+  `revalidatePath()` so the public site updates immediately.
 
-## Deploy on Vercel
+## Deploying
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend:** push to Netlify, set the same three env vars in the site's
+  environment settings.
+- **Backend:** already live once you've run the migration against your
+  Supabase project — nothing else to deploy.
