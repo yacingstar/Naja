@@ -1,8 +1,11 @@
 # Naja
 
-A storefront for a made-to-order 3D-printed lamp shop in Algeria. Cash on
-delivery only — a customer orders, the shop owner calls to confirm, then
-delivers and collects cash.
+*warm light, made for you*
+
+A little storefront for a made-to-order 3D-printed lamp shop in Algeria.
+No payment gateway, no fuss — a customer picks a lamp and a color, the
+shop owner calls to confirm, then delivers it and collects cash at the
+door.
 
 - **Frontend:** Next.js (App Router, JavaScript), Tailwind CSS v4
 - **Backend:** Supabase (Postgres + Auth + Storage)
@@ -74,6 +77,12 @@ Visit `http://localhost:3000` for the storefront and
   then uses a service-role Supabase client (`lib/supabase/admin.js`,
   guarded with `server-only`) to perform the change, and calls
   `revalidatePath()` so the public site updates immediately.
+- **Adding a product** happens in two steps by design: fill in name,
+  description, and price on "New product," then you're dropped straight
+  onto that product's edit page to add its colors — each with its own name,
+  hex swatch, photo (uploaded straight to Supabase Storage), and in-stock
+  toggle. Colors need a real product to attach to, so they can't exist
+  before the product does.
 
 ## Deploying
 
@@ -81,3 +90,7 @@ Visit `http://localhost:3000` for the storefront and
   environment settings.
 - **Backend:** already live once you've run the migration against your
   Supabase project — nothing else to deploy.
+
+---
+
+*made to order, with love*
