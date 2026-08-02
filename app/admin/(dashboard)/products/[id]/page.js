@@ -67,6 +67,22 @@ export default async function EditProductPage({ params }) {
           />
         </div>
 
+        <div>
+          <label className="mb-1 block font-heading text-sm font-semibold text-text">
+            Category (shape) — optional
+          </label>
+          <input
+            name="category"
+            defaultValue={product.category ?? ""}
+            placeholder="e.g. Moon, Cloud, Mushroom"
+            className="w-full rounded-2xl border border-line-strong bg-bg-soft px-4 py-3 text-text outline-none focus:border-glow"
+          />
+          <p className="mt-1 text-xs text-text-dim">
+            Products sharing a category show up together in the &quot;Shop by
+            Shape&quot; row on the homepage.
+          </p>
+        </div>
+
         <div className="flex items-center gap-3">
           <SaveButton>Save changes</SaveButton>
         </div>

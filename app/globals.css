@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #fdf3ea;
+  --color-bg: #fff8fb;
   --color-bg-soft: #ffffff;
-  --color-surface: #fff1e2;
-  --color-line: rgba(90, 66, 58, 0.1);
-  --color-line-strong: rgba(90, 66, 58, 0.18);
-  --color-text: #55423c;
-  --color-text-dim: #a3897f;
-  --color-glow: #ffb84d;
-  --color-glow-dim: #f5a230;
-  --color-paper: #7a5240;
-  --color-pink: #ff90a8;
-  --color-pink-soft: #ffe3ea;
+  --color-surface: #ffe9f2;
+  --color-line: rgba(74, 59, 82, 0.1);
+  --color-line-strong: rgba(74, 59, 82, 0.18);
+  --color-text: #4a3b52;
+  --color-text-dim: #93839e;
+  --color-glow: #ff8fb1;
+  --color-glow-dim: #e8628f;
+  --color-paper: #4a3b52;
+  --color-pink: #ff8fb1;
+  --color-pink-soft: #ffd6e8;
+  --color-lavender: #e3d9ff;
+  --color-mint: #d4f5e9;
+  --color-peach: #ffe3cf;
+  --color-sky: #d6f0ff;
   --color-danger: #e2726a;
 
-  --font-heading: var(--font-quicksand);
-  --font-body: var(--font-nunito);
-  --font-accent: var(--font-caveat);
+  --font-heading: var(--font-baloo);
+  --font-body: var(--font-quicksand);
+  --font-accent: var(--font-baloo);
 
-  --radius-card: 20px;
+  --radius-card: 24px;
 }
 
 @layer base {

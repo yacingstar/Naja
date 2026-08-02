@@ -50,6 +50,11 @@ export default function ProductDetailClient({ product }) {
       </div>
 
       <div>
+        {product.category && (
+          <span className="mb-2 inline-block w-fit rounded-full bg-mint px-2.5 py-0.5 text-xs font-heading font-bold text-[#1f7a5c]">
+            {product.category}
+          </span>
+        )}
         <h1 className="font-heading text-3xl font-bold text-text">
           {product.name}
         </h1>

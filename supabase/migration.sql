@@ -10,8 +10,11 @@ create table if not exists products (
   name text not null,
   description text not null,
   price numeric not null,
-  sort_order int4 default 99
+  sort_order int4 default 99,
+  category text
 );
+
+alter table products add column if not exists category text;
 
 create table if not exists product_colors (
   id uuid primary key default gen_random_uuid(),

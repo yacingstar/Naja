@@ -13,7 +13,7 @@ export default function SaveButton({
   const classes =
     variant === "danger"
       ? "border border-line-strong text-danger hover:bg-danger hover:text-white"
-      : "bg-glow text-[#5c3a12] hover:bg-glow-dim";
+      : "bg-glow text-white hover:bg-glow-dim";
 
   return (
     <button

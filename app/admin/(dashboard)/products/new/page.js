@@ -57,9 +57,28 @@ export default function NewProductPage() {
           />
         </div>
 
+        <div>
+          <label
+            htmlFor="category"
+            className="mb-1 block font-heading text-sm font-semibold text-text"
+          >
+            Category (shape) — optional
+          </label>
+          <input
+            id="category"
+            name="category"
+            placeholder="e.g. Moon, Cloud, Mushroom"
+            className="w-full rounded-2xl border border-line-strong bg-bg-soft px-4 py-3 text-text outline-none focus:border-glow"
+          />
+          <p className="mt-1 text-xs text-text-dim">
+            Products sharing a category show up together in the &quot;Shop by
+            Shape&quot; row on the homepage.
+          </p>
+        </div>
+
         <button
           type="submit"
-          className="rounded-full bg-glow px-6 py-3 font-heading font-semibold text-[#5c3a12] transition hover:-translate-y-0.5 hover:bg-glow-dim"
+          className="rounded-full bg-glow px-6 py-3 font-heading font-semibold text-white transition hover:-translate-y-0.5 hover:bg-glow-dim"
         >
           Create product
         </button>

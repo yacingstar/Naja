@@ -7,8 +7,10 @@ import Button from "@/components/ui/Button";
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-      <p className="font-accent text-2xl text-glow-dim">say hello</p>
-      <h1 className="mt-1 font-heading text-3xl font-bold text-text">
+      <span className="inline-block rounded-full bg-mint px-3 py-1 text-xs font-heading font-bold text-[#1f7a5c]">
+        say hello
+      </span>
+      <h1 className="mt-2 font-heading text-3xl font-bold text-text">
         Contact us
       </h1>
       <p className="mt-3 text-text-dim">
@@ -16,8 +18,8 @@ export default function ContactPage() {
         fastest way to reach us.
       </p>
 
-      <div className="mt-8 rounded-2xl border border-line bg-surface p-5">
-        <p className="font-heading font-semibold text-text">Phone</p>
+      <div className="mt-8 rounded-card bg-surface p-5">
+        <p className="font-heading font-bold text-text">Phone</p>
         <p className="mt-1 text-text-dim">+213 XX XXX XXXX</p>
       </div>
 

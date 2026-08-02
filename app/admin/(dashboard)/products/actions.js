@@ -28,6 +28,7 @@ export async function createProduct(formData) {
   const name = formData.get("name")?.toString().trim();
   const description = formData.get("description")?.toString().trim();
   const price = Number(formData.get("price"));
+  const category = formData.get("category")?.toString().trim() || null;
 
   if (!name || !description || !Number.isFinite(price)) {
     throw new Error("Name, description, and price are required.");
@@ -37,7 +38,7 @@ export async function createProduct(formData) {
 
   const { error } = await supabase
     .from("products")
-    .insert({ id, name, description, price });
+    .insert({ id, name, description, price, category });
 
   if (error) throw new Error(error.message);
 
@@ -54,6 +55,7 @@ export async function updateProduct(formData) {
   const name = formData.get("name")?.toString().trim();
   const description = formData.get("description")?.toString().trim();
   const price = Number(formData.get("price"));
+  const category = formData.get("category")?.toString().trim() || null;
 
   if (!id || !name || !description || !Number.isFinite(price)) {
     throw new Error("Name, description, and price are required.");
@@ -61,7 +63,7 @@ export async function updateProduct(formData) {
 
   const { error } = await supabase
     .from("products")
-    .update({ name, description, price })
+    .update({ name, description, price, category })
     .eq("id", id);
 
   if (error) throw new Error(error.message);

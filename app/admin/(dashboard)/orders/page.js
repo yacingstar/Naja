@@ -31,7 +31,7 @@ export default async function AdminOrdersPage({ searchParams }) {
           />
           <button
             type="submit"
-            className="rounded-full bg-glow px-4 py-2 font-heading text-sm font-semibold text-[#5c3a12] hover:bg-glow-dim"
+            className="rounded-full bg-glow px-4 py-2 font-heading text-sm font-semibold text-white hover:bg-glow-dim"
           >
             Search
           </button>

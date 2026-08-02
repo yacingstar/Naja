@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-full bg-glow px-6 py-3 font-heading font-semibold text-[#5c3a12] transition hover:-translate-y-0.5 hover:bg-glow-dim disabled:opacity-50"
+            className="w-full rounded-full bg-glow px-6 py-3 font-heading font-semibold text-white transition hover:-translate-y-0.5 hover:bg-glow-dim disabled:opacity-50"
           >
             {isSubmitting ? "Logging in…" : "Log in"}
           </button>

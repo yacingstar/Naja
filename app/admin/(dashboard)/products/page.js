@@ -24,6 +24,9 @@ export default async function AdminProductsPage() {
           <thead>
             <tr className="border-b border-line text-sm text-text-dim">
               <th className="px-5 py-3 font-heading font-semibold">Name</th>
+              <th className="px-5 py-3 font-heading font-semibold">
+                Category
+              </th>
               <th className="px-5 py-3 font-heading font-semibold">Price</th>
               <th className="px-5 py-3 font-heading font-semibold">Colors</th>
               <th className="px-5 py-3" />
@@ -34,6 +37,9 @@ export default async function AdminProductsPage() {
               <tr key={product.id} className="border-b border-line last:border-0">
                 <td className="px-5 py-3 font-heading font-semibold text-text">
                   {product.name}
+                </td>
+                <td className="px-5 py-3 text-text-dim">
+                  {product.category || "—"}
                 </td>
                 <td className="px-5 py-3 text-text-dim">
                   {formatPrice(product.price)}
@@ -53,7 +59,7 @@ export default async function AdminProductsPage() {
             ))}
             {(!products || products.length === 0) && (
               <tr>
-                <td colSpan={4} className="px-5 py-10 text-center text-text-dim">
+                <td colSpan={5} className="px-5 py-10 text-center text-text-dim">
                   No products yet. Create your first one!
                 </td>
               </tr>

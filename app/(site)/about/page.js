@@ -3,8 +3,10 @@ export const metadata = { title: "About — Naja" };
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <p className="font-accent text-2xl text-glow-dim">our story</p>
-      <h1 className="mt-1 font-heading text-3xl font-bold text-text">
+      <span className="inline-block rounded-full bg-mint px-3 py-1 text-xs font-heading font-bold text-[#1f7a5c]">
+        our story
+      </span>
+      <h1 className="mt-2 font-heading text-3xl font-bold text-text">
         About Naja
       </h1>
       <div className="mt-6 space-y-4 text-text-dim">
